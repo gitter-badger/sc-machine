@@ -1,0 +1,8 @@
+//Level7
+[* quadrangle -> Quad_A_B_C_D (* => nrel_side: nrel_inclusion: Seg_B_C; Seg_C_D;; *);;
+triangle -> Triag_B_C_D (*=> nrel_side: nrel_inclusion: Seg_B_C; Seg_C_D; Seg_B_D;; *);;
+Triag_B_C_D <= nrel_figure_decomposition: { Seg_B_C; Seg_C_D; Seg_B_D };; *] => nrel_image : "file://triangle.png" ; => nrel_sc_text_translation: [Sc-элемент Triag_B_C_D связан выходящими из него дугами, принадлежащими бинарным отношениям nrel_inclusion и nrel_side с sc-элементами Seg_B_C, Seg_B_D и Seg_C_D. Sc-элемент Quad_A_B_C_D связан выходящими из него дугами, принадлежащими бинарным отношениям nrel_inclusion и nrel_side с sc-элементами Seg_B_C и Seg_C_D. Множество, содержащее элементы Seg_B_C, Seg_B_D и Seg_C_D связано с sc-элементом Triag_B_C_D отношением nrel_figure_decomposition. Sc-элемент Triag_B_C_D является элементом множества triangle. Sc-элемент Quad_A_B_C_D является элементом множества quadrangle.] ;;
+
+X => r1: r2: r3: Y; Z ;;
+X => Z; r1: r2: r3: Y ;;
+X => r1: r2: Y; r3: Z ;;

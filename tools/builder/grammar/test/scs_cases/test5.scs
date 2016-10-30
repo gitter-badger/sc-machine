@@ -1,0 +1,6 @@
+
+//Level5
+
+quadrangle -> Quad_A_B_C_D (* => nrel_side: nrel_inclusion: Seg_B_C; Seg_C_D;; *);;
+triangle -> Triag_B_C_D (*=> nrel_side: nrel_inclusion: Seg_B_C; Seg_C_D; Seg_B_D;; *);;
+Triag_B_C_D <= nrel_figure_decomposition: link1 (* -> Seg_B_C; Seg_C_D; Seg_B_D;; *);;

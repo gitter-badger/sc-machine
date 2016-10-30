@@ -8,26 +8,6 @@ options
     ASTLabelType=pANTLR3_BASE_TREE;
 }
 
-tokens {
-  SEP_SENTENCE = ';;';
-  SEP_SIMPLE  =  '|';
-  SEP_LPAR = '(';
-  SEP_RPAR = ')';
-  SEP_ATTR_CONST = ':';
-  SEP_ATTR_VAR = '::';
-  SEP_IDTF = ';';
-  SEP_LINT = '(*';
-  SEP_RINT = '*)';
-  SEP_LTUPLE = '<';
-  SEP_RTUPLE = '>';
-  SEP_LSET = '{';
-  SEP_RSET = '}';
-  SEP_LCONTENT = '[';
-  SEP_RCONTENT = ']';
-  SEP_ASSIGN = '=';
-  
-}
-
 @lexer::includes {
     #include "../parseutils.h"
 }
@@ -54,89 +34,71 @@ tokens {
 
 /* Parser rules */
 syntax
-    : (sentence SEP_SENTENCE!)* EOF
+    : (sentence ';;'!)* EOF
     ;
-    
+       
 sentence
-    : sentence_level1
-    | sentence_level2_6
-    | sentence_assignment
+	// level 1
+    : sentence_lvl1
+	| sentence_lvl_common
     ;
     
-
-sentence_level2_6
-    :
-    | (idtf c1=CONNECTORS a1=attrs_idtf_list -> ^($c1 idtf $a1))
-    (SEP_IDTF c2=CONNECTORS a2=attrs_idtf_list -> $sentence_level2_6 ^($c2 idtf $a2))*
-    ;
-    
-sentence_level1
-    : idtf_level1 SEP_SIMPLE idtf_level1 SEP_SIMPLE idtf_level1 -> ^(SEP_SIMPLE idtf_level1+)
-    ;
-    
-    
-sentence_internal_list
-    : SEP_LINT  (sentence_internal SEP_SENTENCE)* SEP_RINT -> ^(SEP_LINT sentence_internal+)
-    ;
-    
-sentence_assignment
-    : idtf SEP_ASSIGN idtf -> ^(SEP_ASSIGN idtf+)
-    ;
-    
-sentence_internal
-    : CONNECTORS^ attrs_idtf_list
-    ;
-    
-attrs_idtf_list
-    : idtf_attrs  (SEP_IDTF! idtf_attrs)*
-    ;
-    
-idtf_attrs
-    : attrs_list idtf_internal
-    ;
-    
-attrs_list
-    : (attr_sep)* 
-    ;
-    
-attr_sep
-    : idtf_level1 SEP_ATTR_VAR^
-    | idtf_level1 SEP_ATTR_CONST^
-    ;
-    
-idtf_internal
-    : idtf^ sentence_internal_list?
-    ;
-
-idtf_tuple
-    : SEP_LTUPLE^ attrs_idtf_list  SEP_RTUPLE!
-    ;
-    
-idtf_set
-    : SEP_LSET^ attrs_idtf_list SEP_RSET!
-    ;
-
-idtf
-    : idtf_level1
-    | idtf_edge
-    | idtf_tuple
-    | idtf_set
-    | CONTENT
-    ;
-
-idtf_level1
-    : ID_SYSTEM
-    | LINK
-    ;
+idtf_lvl1
+	:	
+	    (('sc_node' |
+		  'sc_link' |
+		  'sc_arc_common' |
+		  'sc_edge' |
+		  'sc_arc_main' |
+		  'sc_arc_access') '#')? ID_SYSTEM
+	;
 
 idtf_edge
-    : SEP_LPAR^ idtf CONNECTORS idtf SEP_RPAR! 
-    ;
+	: '(' ID_SYSTEM CONNECTORS ID_SYSTEM ')'
+	;
+	
+idtf_set
+	: '{' attr_list? idtf_common (';' attr_list? idtf_common)* '}'
+	;
+
+idtf_common
+	: ID_SYSTEM
+	| idtf_edge
+	| idtf_set
+	| CONTENT
+	| LINK
+	;
+
+idtf_list
+	: idtf_common internal_sentece_list? (';' idtf_common internal_sentece_list?)*
+	;
+	
+internal_sentence
+	: CONNECTORS attr_list? idtf_list
+	;
+	
+internal_sentece_list
+	: '(*' (internal_sentence ';;')+ '*)'
+	;
+
+sentence_lvl1
+ 	: idtf_lvl1 '|' idtf_lvl1 '|' idtf_lvl1
+ 	;
+
+
+sentence_lvl_common
+	: idtf_common CONNECTORS attr_list? idtf_list
+	;
+
+attr_list
+	: (ID_SYSTEM (':'|'::'))+
+	;
 
 // --------------- separators -----------------
 
 
-ID_SYSTEM  :    ('a'..'z'|'A'..'Z'|'_'|'.'|'0'..'9'|'#')+
+ID_SYSTEM
+    :   ('a'..'z'|'A'..'Z'|'_'|'.'|'0'..'9')+
     ;
 
 COMMENT
@@ -144,66 +106,37 @@ COMMENT
     |   ('/*' | '/!*') ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
     ;
 
-CONTENT
-    @init{int count = 1;}
-  	: '_'? SEP_LCONTENT
-  	  (
-  	  { count > 0 }? =>
-  	   	 (
-  		  ~ (SEP_LCONTENT | SEP_RCONTENT)
-	  	  | SEP_LCONTENT { count++; } 
-  		  | SEP_RCONTENT { count--; }
-	  	  )
-	  )*
-  	;
-
 
 LINK
      :  '"' (   ~('"')  | '\\"'  )* '"'
      ;
+CONTENT
+    @init{int count = 1;}
+  	: '_'? '['
+  	  (
+  	  { count > 0 }? =>
+  	   	 (
+  		  ~ ('[' | ']')
+	  	  | '[' { count++; } 
+  		  | ']' { count--; }
+	  	  )
+	  )*
+  	;
     
-CONNECTORS  :  ( 
-                '<>'
-              | '>'
-              | '<'
-              | '..>'
-              | '<..'
-              | '->'
-              | '<-'
-              | '<=>'
-              | '=>'
-              | '<='
-              | '-|>'
-              | '<|-'
-              | '-/>'
-              | '</-'
-              | '~>'
-              | '<~'
-              | '~|>'
-              | '<|~'
-              | '~/>'
-              | '</~'
-              | '_<>'
-              | '_>'
-              | '_<'
-              | '_..>'
-              | '_<..'
-              | '_->'
-              | '_<-'
-              | '_<=>'
-              | '_=>'
-              | '_<='
-              | '_-|>'
-              | '_<|-'
-              | '_-/>'
-              | '_</-'
-              | '_~>'
-              | '_<~'
-              | '_~|>'
-              | '_<|~'
-              | '_~/>'
-              | '_</~' )
-              ;
+CONNECTORS
+	 :  ( 
+         '<>'  | '>'   | '<'   |
+         '..>' | '<..' | '->'  |
+         '<-'  | '<=>' | '=>'  | '<=' |
+         '-|>' | '<|-' | '-/>' | '</-' |
+         '~>'  | '<~'  | '~|>' | '<|~' |
+         '~/>' | '</~' | '_<>' | '_>'  |
+         '_<'  | '_..>'| '_<..'| '_->' |
+         '_<-' | '_<=>'| '_=>' | '_<=' |
+         '_-|>'| '_<|-'| '_-/>'| '_</-'|
+         '_~>' | '_<~' | '_~|>'| '_<|~'|
+         '_~/>'| '_</~'
+         );
 
 fragment
 HEX_DIGIT : ('0'..'9'|'a'..'f'|'A'..'F') ;

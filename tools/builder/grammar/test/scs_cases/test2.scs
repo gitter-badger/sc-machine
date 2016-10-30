@@ -1,0 +1,18 @@
+//Level2
+
+nrel_side -> ( Quad_A_B_C_D => Seg_B_C );;
+nrel_side -> ( Quad_A_B_C_D => Seg_C_D );;
+nrel_side -> ( Triag_B_C_D => Seg_B_C );;
+nrel_side -> ( Triag_B_C_D => Seg_C_D );;
+nrel_side -> ( Triag_B_C_D => Seg_B_D );;
+nrel_inclusion -> ( Quad_A_B_C_D => Seg_B_C );;
+nrel_inclusion -> ( Quad_A_B_C_D => Seg_C_D );;
+nrel_inclusion -> ( Triag_B_C_D => Seg_B_C );;
+nrel_inclusion -> (Triag_B_C_D => Seg_C_D );;
+nrel_inclusion -> ( Triag_B_C_D => Seg_B_D );;
+quadrangle -> Quad_A_B_C_D;;
+triangle -> Triag_B_C_D;;
+nrel_figure_decomposition -> ( link1 => Triag_B_C_D );;
+link1 -> Seg_B_C;;
+link1 -> Seg_C_D;;
+link1 -> Seg_B_D;;

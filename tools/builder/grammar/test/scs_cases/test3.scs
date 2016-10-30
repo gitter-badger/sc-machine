@@ -1,0 +1,16 @@
+
+//Level3
+
+Quad_A_B_C_D => nrel_side : nrel_inclusion : Seg_B_C;;
+Quad_A_B_C_D => nrel_side : nrel_inclusion : Seg_C_D;;
+Triag_B_C_D => nrel_side : nrel_inclusion : Seg_B_C;;
+Triag_B_C_D => nrel_side : nrel_inclusion : Seg_C_D;;
+Triag_B_C_D => nrel_side: nrel_inclusion : Seg_B_D;;
+quadrangle -> Quad_A_B_C_D;;
+triangle -> Triag_B_C_D;;
+Triag_B_C_D <= nrel_figure_decomposition: link1;;
+link1 -> Seg_B_C;;
+link1 -> Seg_C_D;;
+link1 -> Seg_B_D;;
+
+X => r1: r2: r3: Y;;

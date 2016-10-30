@@ -1,0 +1,24 @@
+//Level1
+
+nrel_inclusion | sc_arc_main#arc1 | sc_arc_common#pair2;;
+nrel_inclusion | sc_arc_main#arc2 | sc_arc_common#pair1;;
+nrel_inclusion | sc_arc_main#arc3 | sc_arc_common#pair3;;
+nrel_inclusion | sc_arc_main#arc4 | sc_arc_common#pair4;;
+nrel_inclusion | sc_arc_main#arc15 | sc_arc_common#pair5;;
+Quad_A_B_C_D | sc_arc_common#pair1 | Seg_B_C;;
+Quad_A_B_C_D | sc_arc_common#pair2 | Seg_C_D;;
+Triag_B_C_D | sc_arc_common#pair3 | Seg_B_C;;
+Triag_B_C_D | sc_arc_common#pair4 | Seg_C_D;; 
+Triag_B_C_D | sc_arc_common#pair5 | Seg_B_D;; 
+nrel_side | sc_arc_main#arc5 | sc_arc_common#pair1;;
+nrel_side | sc_arc_main#arc6 | sc_arc_common#pair2;;
+nrel_side | sc_arc_main#arc7 | sc_arc_common#pair4;;
+nrel_side | sc_arc_main#arc8 | sc_arc_common#pair3;;
+nrel_side | sc_arc_main#arc10 | sc_arc_common#pair5;;
+quadrangle | sc_arc_main#arc9 | Quad_A_B_C_D;;
+triangle | sc_arc_main#arc15 | Triag_B_C_D;;
+link1 | sc_arc_common#pair6 | Triag_B_C_D;; 
+nrel_figure_decomposition | sc_arc_main#arc14 | sc_arc_common#pair6;;
+link1 | sc_arc_main#arc11 | Seg_B_C;;
+link1 | sc_arc_main#arc12 | Seg_C_D;;
+link1 | sc_arc_main#arc13 | Seg_B_D;;

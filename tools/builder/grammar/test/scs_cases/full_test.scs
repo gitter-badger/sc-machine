@@ -1,0 +1,142 @@
+//Level1
+
+nrel_inclusion | sc_arc_main#arc1 | sc_arc_common#pair2;;
+nrel_inclusion | sc_arc_main#arc2 | sc_arc_common#pair1;;
+nrel_inclusion | sc_arc_main#arc3 | sc_arc_common#pair3;;
+nrel_inclusion | sc_arc_main#arc4 | sc_arc_common#pair4;;
+nrel_inclusion | sc_arc_main#arc15 | sc_arc_common#pair5;;
+nrel_side | sc_arc_main#arc5 | sc_arc_common#pair1;;
+nrel_side | sc_arc_main#arc6 | sc_arc_common#pair2;;
+nrel_side | sc_arc_main#arc7 | sc_arc_common#pair4;;
+nrel_side | sc_arc_main#arc8 | sc_arc_common#pair3;;
+nrel_side | sc_arc_main#arc10 | sc_arc_common#pair5;;
+Quad_A_B_C_D | sc_arc_common#pair1 | Seg_B_C;;
+Quad_A_B_C_D | sc_arc_common#pair2 | Seg_C_D;;
+Triag_B_C_D | sc_arc_common#pair3 | Seg_B_C;;
+Triag_B_C_D | sc_arc_common#pair4 | Seg_C_D;; 
+Triag_B_C_D | sc_arc_common#pair5 | Seg_B_D;; 
+quadrangle | sc_arc_main#arc9 | Quad_A_B_C_D;;
+triangle | sc_arc_main#arc15 | Triag_B_C_D;;
+link1 | sc_arc_common#pair6 | Triag_B_C_D;; 
+nrel_figure_decomposition | sc_arc_main#arc14 | sc_arc_common#pair6;;
+link1 | sc_arc_main#arc11 | Seg_B_C;;
+link1 | sc_arc_main#arc12 | Seg_C_D;;
+link1 | sc_arc_main#arc13 | Seg_B_D;;
+
+//Level2
+
+nrel_side -> ( Quad_A_B_C_D => Seg_B_C );;
+nrel_side -> ( Quad_A_B_C_D => Seg_C_D );;
+nrel_side -> ( Triag_B_C_D => Seg_B_C );;
+nrel_side -> ( Triag_B_C_D => Seg_C_D );;
+nrel_side -> ( Triag_B_C_D => Seg_B_D );;
+nrel_inclusion -> ( Quad_A_B_C_D => Seg_B_C );;
+nrel_inclusion -> ( Quad_A_B_C_D => Seg_C_D );;
+nrel_inclusion -> ( Triag_B_C_D => Seg_B_C );;
+nrel_inclusion -> (Triag_B_C_D => Seg_C_D );;
+nrel_inclusion -> ( Triag_B_C_D => Seg_B_D );;
+quadrangle -> Quad_A_B_C_D;;
+triangle -> Triag_B_C_D;;
+nrel_figure_decomposition -> ( link1 => Triag_B_C_D );;
+link1 -> Seg_B_C;;
+link1 -> Seg_C_D;;
+link1 -> Seg_B_D;;
+
+//Level3
+
+Quad_A_B_C_D => nrel_side : nrel_inclusion : Seg_B_C;;
+Quad_A_B_C_D => nrel_side : nrel_inclusion : Seg_C_D;;
+Triag_B_C_D => nrel_side : nrel_inclusion : Seg_B_C;;
+Triag_B_C_D => nrel_side : nrel_inclusion : Seg_C_D;;
+Triag_B_C_D => nrel_side: nrel_inclusion : Seg_B_D;;
+quadrangle -> Quad_A_B_C_D;;
+triangle -> Triag_B_C_D;;
+Triag_B_C_D <= nrel_figure_decomposition: link1;;
+link1 -> Seg_B_C;;
+link1 -> Seg_C_D;;
+link1 -> Seg_B_D;;
+
+X => r1: r2: r3: Y;;
+
+//Level4
+
+Quad_A_B_C_D => nrel_side: nrel_inclusion: Seg_B_C; Seg_C_D;;
+Triag_B_C_D => nrel_side: nrel_inclusion: Seg_B_C; Seg_C_D; Seg_B_D;;
+quadrangle -> Quad_A_B_C_D;;
+triangle -> Triag_B_C_D;;
+Triag_B_C_D <= nrel_figure_decomposition: link1;;
+link1 -> Seg_B_C; Seg_C_D; Seg_B_D;;
+
+//Level5
+
+quadrangle -> Quad_A_B_C_D (* => nrel_side: nrel_inclusion: Seg_B_C; Seg_C_D;; *);;
+triangle -> Triag_B_C_D (*=> nrel_side: nrel_inclusion: Seg_B_C; Seg_C_D; Seg_B_D;; *);;
+Triag_B_C_D <= nrel_figure_decomposition: link1 (* -> Seg_B_C; Seg_C_D; Seg_B_D;; *);;
+
+//Level6
+
+[Sc-элемент Triag_B_C_D связан выходящими из него дугами, принадлежащими бинарным отношениям nrel_inclusion и nrel_side с sc-элементами Seg_B_C, Seg_B_D и Seg_C_D. Sc-элемент Quad_A_B_C_D связан выходящими из него дугами, принадлежащими бинарным отношениям nrel_inclusion и nrel_side с sc-элементами Seg_B_C и Seg_C_D. Множество, содержащее элементы Seg_B_C, Seg_B_D и Seg_C_D связано с sc-элементом Triag_B_C_D отношением nrel_figure_decomposition. Sc-элемент Triag_B_C_D является элементом множества triangle. Sc-элемент Quad_A_B_C_D является элементом множества quadrangle.]
+<= nrel_sc_text_translation: [* quadrangle -> Quad_A_B_C_D (* => nrel_side: nrel_inclusion: Seg_B_C; Seg_C_D;; *);;
+triangle -> Triag_B_C_D (*=> nrel_side: nrel_inclusion: Seg_B_C; Seg_C_D; Seg_B_D;; *);;
+Triag_B_C_D <= nrel_figure_decomposition: { Seg_B_C; Seg_C_D; Seg_B_D };; *] (* => nrel_image : "file://triangle.png";; *);;
+
+triangle <= nrel_subdividing:
+	{
+		scalene_triangle;
+		strict_isosceles_triangle;
+		equilateral_triangle
+	};;
+
+nrel_exponention -> {rrel_base : 2; rrel_factor : 3; rrel_exponent : 8};;
+
+//Level7
+[* quadrangle -> Quad_A_B_C_D (* => nrel_side: nrel_inclusion: Seg_B_C; Seg_C_D;; *);;
+triangle -> Triag_B_C_D (*=> nrel_side: nrel_inclusion: Seg_B_C; Seg_C_D; Seg_B_D;; *);;
+Triag_B_C_D <= nrel_figure_decomposition: { Seg_B_C; Seg_C_D; Seg_B_D };; *] => nrel_image : "file://triangle.png" ; => nrel_sc_text_translation: [Sc-элемент Triag_B_C_D связан выходящими из него дугами, принадлежащими бинарным отношениям nrel_inclusion и nrel_side с sc-элементами Seg_B_C, Seg_B_D и Seg_C_D. Sc-элемент Quad_A_B_C_D связан выходящими из него дугами, принадлежащими бинарным отношениям nrel_inclusion и nrel_side с sc-элементами Seg_B_C и Seg_C_D. Множество, содержащее элементы Seg_B_C, Seg_B_D и Seg_C_D связано с sc-элементом Triag_B_C_D отношением nrel_figure_decomposition. Sc-элемент Triag_B_C_D является элементом множества triangle. Sc-элемент Quad_A_B_C_D является элементом множества quadrangle.] ;;
+
+X => r1: r2: r3: Y; Z ;;
+X => Z; r1: r2: r3: Y ;;
+X => r1: r2: Y; r3: Z ;;
+
+//Arcs
+a1 <> a2;;
+a3 > a4;;
+a5 < a6;;
+a7 ..> a8;;
+a9 <.. a10;;
+a11 -> a12;;
+a13 <- a14;;
+a15 <=> a16;;
+a17 _<=> a18;;
+a19 => a20;;
+a21 <= a22;;
+a23 _=> a24;;
+a25 _<= a26;;
+a27 _-> a28;;
+a29 _<- a30;;
+a31 -|> a32;;
+a33 <|- a34;;
+a35 _-|> a36;;
+a37 _<|- a38;;
+a39 -/> a40;;
+a41 </- a42;;
+a43 _-/> a44;;
+a45 _</- a46;;
+a47 ~> a48;;
+a49 <~ a50;;
+a51 _~> a52;;
+a53 _<~ a54;;
+a55 ~|> a56;;
+a57 <|~ a58;;
+a59 _~|> a60;;
+a61 _<|~ a62;;
+a63 ~/> a64;;
+a65 </~ a66;;
+a67 _~/> a68;;
+a69 _</~ a70;;
+
+//Modifiers
+b1 ; b2 => nrel1 : nrel2 : b3; b4;;
+b5 ; b6 => nrel3 :: nrel4 :: b7; b8;;
+b9 <= rrel1nrel5: { b10; b11; b12 };;
+b13 <= rrel2nrel6:: { b14; b15; b16 };;
